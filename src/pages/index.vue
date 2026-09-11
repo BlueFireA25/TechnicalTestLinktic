@@ -1,85 +1,60 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
-
-        <q-toolbar-title> Quasar App </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
-
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
-
-        <EssentialLink v-for="link in linksList" :key="link.label" v-bind="link" />
-      </q-list>
-    </q-drawer>
-
+  <q-layout>
     <q-page-container>
-      <router-view />
+      <q-page class="q-pa-md">
+        <q-table
+          title="Métodos de pago"
+          :rows="paymentMethodsStore.items"
+          :columns="columns"
+          row-key="id"
+          :loading="paymentMethodsStore.isLoading"
+        >
+          <template #body-cell-isActive="props">
+            <q-td :props="props">
+              <q-toggle
+                :model-value="props.row.isActive"
+                @update:model-value="onToggleStatus(props.row.id)"
+              />
+            </q-td>
+          </template>
+        </q-table>
+      </q-page>
     </q-page-container>
   </q-layout>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import EssentialLink, { type EssentialLinkProps } from '@/components/EssentialLink.vue';
+import { onMounted } from 'vue';
+import type { QTableColumn } from 'quasar';
+import { usePaymentMethodsStore } from '../stores/payment-methods-store';
+import type { PaymentMethod } from '../models/payment-method';
 
-const linksList: EssentialLinkProps[] = [
+const paymentMethodsStore = usePaymentMethodsStore();
+
+const columns: QTableColumn<PaymentMethod>[] = [
+  { name: 'name', label: 'Nombre', field: 'name', align: 'left', sortable: true },
+  { name: 'type', label: 'Tipo', field: 'type', align: 'left', sortable: true },
+  { name: 'isActive', label: 'Estado', field: 'isActive', align: 'center' },
   {
-    label: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev',
-  },
-  {
-    label: 'GitHub',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework',
-  },
-  {
-    label: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
-  },
-  {
-    label: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
-  },
-  {
-    label: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev',
-  },
-  {
-    label: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev',
-  },
-  {
-    label: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev',
+    name: 'createdAt',
+    label: 'Fecha de creación',
+    field: 'createdAt',
+    align: 'left',
+    sortable: true,
+    format: (val: string) => new Date(val).toLocaleDateString(),
   },
 ];
 
-const leftDrawerOpen = ref(false);
+onMounted(() => {
+  void paymentMethodsStore.fetchAll();
+});
 
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
+/**
+ * Delega al store el cambio de estado del registro seleccionado.
+ *
+ * @param id - identificador del método de pago
+ */
+function onToggleStatus(id: string) {
+  void paymentMethodsStore.toggleStatus(id);
 }
 </script>
-
-<route lang="yaml">
-{ meta: { requiresAuth: true } }
-</route>
