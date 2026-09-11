@@ -1,5 +1,6 @@
 import { defineRouter } from '#q-app';
 import { routes, handleHotUpdate } from 'vue-router/auto-routes';
+import { useAuthStore } from '../stores/auth-store';
 import {
   createMemoryHistory,
   createRouter,
@@ -37,6 +38,14 @@ export default defineRouter((/* { store, ssrContext } */) => {
   if (import.meta.hot) {
     handleHotUpdate(Router);
   }
+
+  Router.beforeEach((to) => {
+    const authStore = useAuthStore();
+
+    if (to.matched.some((record) => record.meta.requiresAuth) && !authStore.isAuthenticated) {
+      return { path: '/login' };
+    }
+  });
 
   return Router;
 });

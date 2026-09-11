@@ -79,3 +79,7 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 </script>
+
+<route lang="yaml">
+{ meta: { requiresAuth: true } }
+</route>
