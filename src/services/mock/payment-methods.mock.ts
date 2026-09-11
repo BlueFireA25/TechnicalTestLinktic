@@ -61,15 +61,21 @@ export function fetchPaymentMethods(filters: PaymentMethodFilters = {}): Promise
  *
  * @param id - identificador del registro a modificar
  */
-export function toggleStatusRequest(id: string): Promise<PaymentMethod | null> {
-  const item = paymentMethods.find((method) => method.id === id);
+export function toggleStatusRequest(id: string): Promise<PaymentMethod> {
+  const index = paymentMethods.findIndex((method) => method.id === id);
+  const current = paymentMethods[index];
 
-  if (!item) {
-    return simulateRequest(null, { failureRate: 1 });
+  if (!current) {
+    return simulateRequest(null as never, { failureRate: 1 });
   }
 
-  item.isActive = !item.isActive;
-  return simulateRequest(item, { delayMs: 400 });
+  const updated: PaymentMethod = {
+    ...current,
+    isActive: !current.isActive,
+  };
+  paymentMethods[index] = updated;
+
+  return simulateRequest(updated, { delayMs: 50 });
 }
 
 /**
@@ -101,17 +107,22 @@ export function createPaymentMethodRequest(
 export function updatePaymentMethodRequest(
   id: string,
   payload: PaymentMethodFormPayload,
-): Promise<PaymentMethod | null> {
-  const item = paymentMethods.find((method) => method.id === id);
+): Promise<PaymentMethod> {
+  const index = paymentMethods.findIndex((method) => method.id === id);
+  const current = paymentMethods[index];
 
-  if (!item) {
-    return simulateRequest(null, { failureRate: 1 });
+  if (!current) {
+    return simulateRequest(null as never, { failureRate: 1 });
   }
 
-  item.name = payload.name;
-  item.type = payload.type;
+  const updated: PaymentMethod = {
+    ...current,
+    name: payload.name,
+    type: payload.type,
+  };
+  paymentMethods[index] = updated;
 
-  return simulateRequest(item, { delayMs: 500 });
+  return simulateRequest(updated, { delayMs: 500 });
 }
 
 /**
