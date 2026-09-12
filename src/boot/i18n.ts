@@ -26,8 +26,8 @@ export const i18n = createI18n<{ message: MessageSchema }, MessageLanguages>({
   fallbackLocale: 'en-US',
   legacy: false,
   messages,
-})
+});
 
 export default defineBoot(({ app }) => {
-  app.use(i18n)
-})
+  app.use(i18n);
+});

@@ -1,7 +1,8 @@
 <template>
   <q-dialog :model-value="modelValue" @update:model-value="onDialogUpdate" persistent>
-    <q-card style="width: 400px">
-      <q-card-section>
+    <q-card style="width: 400px" class="form-dialog-card">
+      <q-card-section class="row items-center q-pb-none">
+        <q-icon name="account_balance_wallet" color="primary" size="24px" class="q-mr-sm" />
         <div class="text-h6">
           {{
             isEditMode ? t('paymentMethods.form.editTitle') : t('paymentMethods.form.createTitle')
@@ -13,32 +14,52 @@
         <q-form ref="formRef" class="q-gutter-md" @submit.prevent="onSubmit">
           <q-input
             v-model="form.name"
+            outlined
+            rounded
             :label="t('paymentMethods.form.name')"
             :rules="[(val) => !!val || t('paymentMethods.form.nameRequired')]"
-          />
+          >
+            <template #prepend>
+              <q-icon name="badge" />
+            </template>
+          </q-input>
 
           <q-select
             v-model="form.type"
-            label="Tipo"
+            outlined
+            rounded
+            :label="t('paymentMethods.form.type')"
             :options="typeOptions"
             emit-value
             map-options
             :rules="[(val) => !!val || t('paymentMethods.form.typeRequired')]"
-          />
+          >
+            <template #prepend>
+              <q-icon name="category" />
+            </template>
+          </q-select>
 
           <q-input
             v-model="form.description"
+            outlined
+            rounded
             :label="t('paymentMethods.form.description')"
             type="textarea"
             autogrow
-          />
+          >
+            <template #prepend>
+              <q-icon name="notes" />
+            </template>
+          </q-input>
 
           <div class="row justify-end q-gutter-sm">
-            <q-btn :label="t('paymentMethods.form.cancel')" flat @click="onCancel" />
+            <q-btn :label="t('paymentMethods.form.cancel')" flat rounded @click="onCancel" />
             <q-btn
               :label="t('paymentMethods.form.save')"
               type="submit"
               color="primary"
+              rounded
+              unelevated
               :loading="loading"
             />
           </div>
@@ -50,7 +71,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 import type { QForm } from 'quasar';
 import type {
   PaymentMethod,
@@ -69,7 +90,7 @@ const emit = defineEmits<{
   submit: [payload: PaymentMethodFormPayload];
 }>();
 
-const { t } = useI18n()
+const { t } = useI18n();
 const formRef = ref<QForm | null>(null);
 const isEditMode = computed(() => props.paymentMethod !== null);
 
@@ -78,7 +99,7 @@ const typeOptions = computed<{ label: string; value: PaymentMethodType }[]>(() =
   { label: t('paymentMethods.types.debit_card'), value: 'debit_card' },
   { label: t('paymentMethods.types.bank_transfer'), value: 'bank_transfer' },
   { label: t('paymentMethods.types.digital_wallet'), value: 'digital_wallet' },
-])
+]);
 
 const form = reactive<PaymentMethodFormPayload>({
   name: '',
@@ -133,3 +154,9 @@ async function onSubmit() {
 
 defineExpose({ form });
 </script>
+
+<style lang="scss" scoped>
+.form-dialog-card {
+  border-radius: 16px;
+}
+</style>

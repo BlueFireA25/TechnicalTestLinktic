@@ -1,37 +1,65 @@
 <template>
-  <q-form ref="formRef" class="row q-col-gutter-md items-end">
+  <q-form ref="formRef" class="row q-col-gutter-md items-start">
     <div v-for="field in fields" :key="field.name" class="col-12 col-sm-3">
       <q-input
         v-if="field.type === 'text'"
         v-model="values[field.name]"
+        outlined
+        rounded
+        dense
+        hint=" "
         :label="field.label"
         :rules="field.required ? [(val) => !!val || t('paymentMethods.filters.fieldRequired')] : []"
-      />
+      >
+        <template #prepend>
+          <q-icon name="search" size="18px" />
+        </template>
+      </q-input>
 
       <q-select
         v-else-if="field.type === 'select'"
         v-model="values[field.name]"
+        outlined
+        rounded
+        dense
+        hint=" "
         :label="field.label"
         :options="field.options"
         emit-value
         map-options
         :rules="field.required ? [(val) => !!val || t('paymentMethods.filters.fieldRequired')] : []"
-      />
+      >
+        <template #prepend>
+          <q-icon name="tune" size="18px" />
+        </template>
+      </q-select>
 
       <q-input
         v-else-if="field.type === 'date'"
         v-model="values[field.name]"
-        :label="field.label"
+        outlined
+        rounded
+        dense
+        hint=" "
         mask="##/##/####"
         placeholder="DD/MM/AAAA"
+        :label="field.label"
         :rules="field.required ? [(val) => !!val || t('paymentMethods.filters.fieldRequired')] : []"
       >
+        <template #prepend>
+          <q-icon name="event" size="18px" />
+        </template>
         <template #append>
           <q-icon name="event" class="cursor-pointer">
             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
               <q-date v-model="values[field.name]" mask="DD/MM/YYYY">
                 <div class="row items-center justify-end">
-                  <q-btn v-close-popup label="Cerrar" color="primary" flat />
+                  <q-btn
+                    v-close-popup
+                    :label="t('paymentMethods.filters.clear')"
+                    color="primary"
+                    flat
+                  />
                 </div>
               </q-date>
             </q-popup-proxy>
@@ -41,8 +69,15 @@
     </div>
 
     <div class="col-12 col-sm-auto q-gutter-sm">
-      <q-btn :label="t('paymentMethods.filters.search')" color="primary" @click="onSearch" />
-      <q-btn :label="t('paymentMethods.filters.clear')" flat @click="onClear" />
+      <q-btn
+        :label="t('paymentMethods.filters.search')"
+        icon="search"
+        color="primary"
+        rounded
+        unelevated
+        @click="onSearch"
+      />
+      <q-btn :label="t('paymentMethods.filters.clear')" flat rounded @click="onClear" />
     </div>
   </q-form>
 </template>

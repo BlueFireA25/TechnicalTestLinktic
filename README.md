@@ -71,4 +71,5 @@ type PaymentMethodType = 'credit_card' | 'debit_card' | 'bank_transfer' | 'digit
 
 ### Comentarios adicionales
 - Se utilizaron los plugins de quasar Dialog y Notify
+- Accesibilidad en el tamaño de fuente para algunos texto de la Aplicación, el cual funciona a traves de la store `accessibility-store.ts`
 - Adicional se agregaron traducciones (inglés y español)

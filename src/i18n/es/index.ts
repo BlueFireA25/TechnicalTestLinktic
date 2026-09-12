@@ -8,6 +8,8 @@ export default {
       invalidCredentials: 'Usuario o contraseña incorrectos',
       usernameRequired: 'El usuario es obligatorio',
       passwordRequired: 'La contraseña es obligatoria',
+      fillDemoCredentials: 'Autocompletar credenciales de prueba',
+      logoLoadError: 'No se pudo cargar el logo',
     },
     logout: 'Cerrar sesión',
   },
@@ -63,6 +65,8 @@ export default {
     delete: {
       title: 'Eliminar método de pago',
       message: '¿Seguro que deseas eliminar "{name}"? Esta acción no se puede deshacer.',
+      confirm: 'Eliminar',
+      deletedSuccess: 'Método de pago eliminado correctamente',
     },
 
     errors: {
@@ -73,4 +77,20 @@ export default {
       delete: 'No se pudo eliminar el método de pago',
     },
   },
-}
+
+  accessibility: {
+    increaseFont: 'Aumentar tamaño de texto',
+    decreaseFont: 'Disminuir tamaño de texto',
+  },
+
+  languageSwitcher: {
+    spanish: 'Español',
+    english: 'Inglés',
+  },
+
+  notFound: {
+    title: 'Esta página no existe',
+    subtitle: 'Verifica la dirección o vuelve al listado de métodos de pago.',
+    goHome: 'Ir al inicio',
+  },
+};

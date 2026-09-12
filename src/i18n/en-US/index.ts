@@ -8,6 +8,8 @@ export default {
       invalidCredentials: 'Invalid username or password',
       usernameRequired: 'Username is required',
       passwordRequired: 'Password is required',
+      fillDemoCredentials: 'Autofill demo credentials',
+      logoLoadError: "Logo couldn't load",
     },
     logout: 'Log out',
   },
@@ -63,6 +65,8 @@ export default {
     delete: {
       title: 'Delete payment method',
       message: 'Are you sure you want to delete "{name}"? This action cannot be undone.',
+      confirm: 'Delete',
+      deletedSuccess: 'Payment method deleted successfully',
     },
 
     errors: {
@@ -73,4 +77,20 @@ export default {
       delete: 'Could not delete the payment method',
     },
   },
-}
+
+  accessibility: {
+    increaseFont: 'Increase text size',
+    decreaseFont: 'Decrease text size',
+  },
+
+  languageSwitcher: {
+    spanish: 'Spanish',
+    english: 'English',
+  },
+
+  notFound: {
+    title: "This page doesn't exist",
+    subtitle: 'Check the address or go back to the payment methods list.',
+    goHome: 'Go to home',
+  },
+};
