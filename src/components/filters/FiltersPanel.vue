@@ -5,7 +5,7 @@
         v-if="field.type === 'text'"
         v-model="values[field.name]"
         :label="field.label"
-        :rules="field.required ? [(val) => !!val || 'Campo obligatorio'] : []"
+        :rules="field.required ? [(val) => !!val || t('paymentMethods.filters.fieldRequired')] : []"
       />
 
       <q-select
@@ -15,13 +15,34 @@
         :options="field.options"
         emit-value
         map-options
-        :rules="field.required ? [(val) => !!val || 'Campo obligatorio'] : []"
+        :rules="field.required ? [(val) => !!val || t('paymentMethods.filters.fieldRequired')] : []"
       />
+
+      <q-input
+        v-else-if="field.type === 'date'"
+        v-model="values[field.name]"
+        :label="field.label"
+        mask="##/##/####"
+        placeholder="DD/MM/AAAA"
+        :rules="field.required ? [(val) => !!val || t('paymentMethods.filters.fieldRequired')] : []"
+      >
+        <template #append>
+          <q-icon name="event" class="cursor-pointer">
+            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+              <q-date v-model="values[field.name]" mask="DD/MM/YYYY">
+                <div class="row items-center justify-end">
+                  <q-btn v-close-popup label="Cerrar" color="primary" flat />
+                </div>
+              </q-date>
+            </q-popup-proxy>
+          </q-icon>
+        </template>
+      </q-input>
     </div>
 
     <div class="col-12 col-sm-auto q-gutter-sm">
-      <q-btn label="Buscar" color="primary" @click="onSearch" />
-      <q-btn label="Limpiar" flat @click="onClear" />
+      <q-btn :label="t('paymentMethods.filters.search')" color="primary" @click="onSearch" />
+      <q-btn :label="t('paymentMethods.filters.clear')" flat @click="onClear" />
     </div>
   </q-form>
 </template>
@@ -30,6 +51,7 @@
 import { reactive, ref } from 'vue';
 import { useQuasar } from 'quasar';
 import type { QForm } from 'quasar';
+import { useI18n } from 'vue-i18n';
 
 /**
  * Opción seleccionable para un campo de tipo select.
@@ -47,7 +69,7 @@ export interface FilterFieldOption {
 export interface FilterFieldConfig {
   name: string;
   label: string;
-  type: 'text' | 'select';
+  type: 'text' | 'select' | 'date';
   options?: FilterFieldOption[];
   required?: boolean;
 }
@@ -57,10 +79,11 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  search: [values: Record<string, unknown>];
+  search: [values: Record<string, string | null>];
   clear: [];
 }>();
 
+const { t } = useI18n();
 const $q = useQuasar();
 const formRef = ref<QForm | null>(null);
 
@@ -80,7 +103,7 @@ async function onSearch() {
   const isValid = await formRef.value?.validate();
 
   if (!isValid) {
-    $q.notify({ type: 'warning', message: 'Completa los campos obligatorios antes de buscar' });
+    $q.notify({ type: 'warning', message: t('paymentMethods.filters.validationError') });
     return;
   }
 

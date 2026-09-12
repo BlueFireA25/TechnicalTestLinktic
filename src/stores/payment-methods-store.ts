@@ -41,7 +41,7 @@ export const usePaymentMethodsStore = defineStore('paymentMethods', {
       try {
         this.items = await fetchPaymentMethods(appliedFilters);
       } catch (error) {
-        notifyError('No se pudo cargar el listado de métodos de pago');
+        notifyError('paymentMethods.errors.fetch');
         throw error;
       } finally {
         this.isLoading = false;
@@ -61,7 +61,7 @@ export const usePaymentMethodsStore = defineStore('paymentMethods', {
           this.items[index] = updated;
         }
       } catch (error) {
-        notifyError('No se pudo actualizar el estado del método de pago');
+        notifyError('paymentMethods.errors.toggleStatus');
         throw error;
       }
     },
@@ -76,7 +76,7 @@ export const usePaymentMethodsStore = defineStore('paymentMethods', {
         const created = await createPaymentMethodRequest(payload);
         this.items = [created, ...this.items];
       } catch (error) {
-        notifyError('No se pudo crear el método de pago');
+        notifyError('paymentMethods.errors.create');
         throw error;
       }
     },
@@ -95,7 +95,7 @@ export const usePaymentMethodsStore = defineStore('paymentMethods', {
           this.items[index] = updated;
         }
       } catch (error) {
-        notifyError('No se pudo actualizar el método de pago');
+        notifyError('paymentMethods.errors.update');
         throw error;
       }
     },
@@ -110,7 +110,7 @@ export const usePaymentMethodsStore = defineStore('paymentMethods', {
         await deletePaymentMethodRequest(id);
         this.items = this.items.filter((item) => item.id !== id);
       } catch (error) {
-        notifyError('No se pudo eliminar el método de pago');
+        notifyError('paymentMethods.errors.delete');
         throw error;
       }
     },

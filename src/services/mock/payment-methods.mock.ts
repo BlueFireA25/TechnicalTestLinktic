@@ -33,6 +33,7 @@ export interface PaymentMethodFilters {
   name?: string;
   type?: string;
   isActive?: boolean;
+  createdAt?: string; // formato YYYY-MM-DD
 }
 
 /**
@@ -49,8 +50,11 @@ export function fetchPaymentMethods(filters: PaymentMethodFilters = {}): Promise
     const matchesType = filters.type ? item.type === filters.type : true;
     const matchesStatus =
       filters.isActive !== undefined ? item.isActive === filters.isActive : true;
+    const matchesDate = filters.createdAt
+      ? item.createdAt.slice(0, 10) === filters.createdAt
+      : true;
 
-    return matchesName && matchesType && matchesStatus;
+    return matchesName && matchesType && matchesStatus && matchesDate;
   });
 
   return simulateRequest(filtered, { delayMs: 500 });
@@ -90,6 +94,7 @@ export function createPaymentMethodRequest(
     id: crypto.randomUUID(),
     name: payload.name,
     type: payload.type,
+    description: payload.description,
     isActive: true,
     createdAt: new Date().toISOString(),
   };
@@ -119,6 +124,7 @@ export function updatePaymentMethodRequest(
     ...current,
     name: payload.name,
     type: payload.type,
+    description: payload.description,
   };
   paymentMethods[index] = updated;
 

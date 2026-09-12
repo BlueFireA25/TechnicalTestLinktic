@@ -8,6 +8,7 @@ export interface PaymentMethod {
   id: string
   name: string
   type: PaymentMethodType
+  description?: string | undefined
   isActive: boolean
   createdAt: string // ISO date
 }

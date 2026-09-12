@@ -2,13 +2,15 @@
  * Wrapper sobre Quasar Notify para centralizar el feedback de errores globales.
  * Permite que los stores notifiquen fallos sin que las vistas manejen esa lógica.
  */
-import { Notify } from 'quasar'
+import { Notify } from 'quasar';
+import { i18n } from '../boot/i18n';
 
 /**
- * Muestra una notificación de error genérica al usuario.
+ * Muestra una notificación de error genérica al usuario, traducida
+ * según el idioma activo de la aplicación.
  *
- * @param message - mensaje a mostrar, con un texto por defecto
+ * @param key - clave de traducción del mensaje (ej. 'paymentMethods.errors.fetch')
  */
-export function notifyError(message = 'Ocurrió un error inesperado'): void {
-  Notify.create({ type: 'negative', message })
+export function notifyError(key: string): void {
+  Notify.create({ type: 'negative', message: i18n.global.t(key) });
 }
